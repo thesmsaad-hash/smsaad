@@ -90,7 +90,7 @@ export async function sendNewPostBroadcast(
   }
 
   try {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://smsaad.smsaad05082003.workers.dev";
     const postUrl = `${siteUrl}/knowledge/artificial-intelligence/${postSlug}`;
 
     const { data, error } = await resend.emails.send({
