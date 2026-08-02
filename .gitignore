@@ -6,8 +6,9 @@
 # testing
 /coverage
 
-# next.js
+# next.js & open-next build artifacts
 /.next/
+/.open-next/
 /out/
 
 # production
@@ -22,9 +23,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# local env files - NEVER commit these (contain API keys)
 .env
+.env.local
+.env*.local
+.env.example
 
 # vercel
 .vercel

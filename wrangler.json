@@ -1,16 +1,12 @@
 {
   "name": "smsaad-platform",
-  "pages_build_output_dir": ".next",
+  "main": ".open-next/worker.js",
   "compatibility_date": "2026-02-01",
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  "env": {
-    "production": {
-      "vars": {
-        "NEXT_PUBLIC_APP_NAME": "SMSAAD",
-        "NEXT_PUBLIC_SITE_URL": "https://smsaad.com"
-      }
-    }
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
   }
 }
