@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/server";
 import { sendNewPostBroadcast } from "@/lib/resend/email";
 
 export async function POST(request: Request) {
@@ -13,9 +13,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = await createClient();
 
     // Fetch active subscriber emails
     const { data: subscribers, error: subError } = await supabase
