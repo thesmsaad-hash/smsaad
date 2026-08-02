@@ -15,7 +15,7 @@ export async function sendWelcomeEmail(email: string) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "SMSAAD <onboarding@resend.dev>",
+      from: "SMSAAD <noreply@smsaad.online>",
       to: [email],
       subject: "Welcome to SMSAAD — AI Video & Creative Technology Knowledge Base",
       html: `
@@ -60,7 +60,7 @@ export async function sendContactNotification(name: string, email: string, subje
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "SMSAAD Contact <onboarding@resend.dev>",
+      from: "SMSAAD Contact <contact@smsaad.online>",
       to: ["saadshaik191@gmail.com"],
       subject: `New Contact Submission: ${subject}`,
       html: `
@@ -106,7 +106,7 @@ export async function sendNewPostBroadcast(
 
     for (const recipient of recipients) {
       const { data, error } = await resend.emails.send({
-        from: "SMSAAD Dispatch <onboarding@resend.dev>",
+        from: "SMSAAD Dispatch <noreply@smsaad.online>",
         to: [recipient],
         subject: `🚀 New ${postType.toUpperCase()}: ${postTitle}`,
         html: `
