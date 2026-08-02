@@ -12,7 +12,8 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`);
     }
+    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`);
   }
 
-  return NextResponse.redirect(`${origin}/login?error=Could%20not%20authenticate%20user`);
+  return NextResponse.redirect(`${origin}/login?error=No%20authorization%20code%20provided`);
 }

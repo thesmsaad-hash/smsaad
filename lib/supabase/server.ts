@@ -6,21 +6,26 @@ import { cookies } from "next/headers";
 // accessible via Cloudflare Workers bindings at runtime — they are NOT baked at
 // build time by webpack, so they always reflect the value set in Cloudflare's
 // Variables and Secrets panel.
-const SUPABASE_URL =
-  process.env.SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  "https://yjitwxzncizajpzaehur.supabase.co";
+function getSupabaseConfig() {
+  const url =
+    process.env.SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    "https://yjitwxzncizajpzaehur.supabase.co";
 
-const SUPABASE_ANON_KEY =
-  process.env.SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-  "";
+  const anonKey =
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    "sb_publishable_TWjoDC1RdnhFZgs-f8bA7Q_Ama3QW30";
+
+  return { url, anonKey };
+}
 
 export async function createClient() {
+  const { url, anonKey } = getSupabaseConfig();
   const cookieStore = await cookies();
 
-  return createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  return createServerClient(url, anonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -39,5 +44,6 @@ export async function createClient() {
 }
 
 export function createPublicClient() {
-  return createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { url, anonKey } = getSupabaseConfig();
+  return createSupabaseClient(url, anonKey);
 }
