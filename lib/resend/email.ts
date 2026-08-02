@@ -1,9 +1,12 @@
 import { Resend } from "resend";
 
-const resendApiKey = process.env.RESEND_API_KEY;
-export const resend = resendApiKey ? new Resend(resendApiKey) : null;
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  return apiKey ? new Resend(apiKey) : null;
+}
 
 export async function sendWelcomeEmail(email: string) {
+  const resend = getResendClient();
   if (!resend) {
     console.log(`[Resend Mock] Welcome email dispatched to ${email}`);
     return { success: true, mocked: true };
@@ -11,7 +14,7 @@ export async function sendWelcomeEmail(email: string) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "SMSAAD <noreply@smsaad.online>",
+      from: "SMSAAD <onboarding@resend.dev>",
       to: [email],
       subject: "Welcome to SMSAAD — AI Video & Creative Technology Knowledge Base",
       html: `
@@ -48,6 +51,7 @@ export async function sendWelcomeEmail(email: string) {
 }
 
 export async function sendContactNotification(name: string, email: string, subject: string, message: string) {
+  const resend = getResendClient();
   if (!resend) {
     console.log(`[Resend Mock] Contact notification from ${name} (${email}): ${subject}`);
     return { success: true, mocked: true };
@@ -55,8 +59,8 @@ export async function sendContactNotification(name: string, email: string, subje
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "SMSAAD Contact <contact@smsaad.online>",
-      to: ["admin@smsaad.com"],
+      from: "SMSAAD Contact <onboarding@resend.dev>",
+      to: ["saadshaik191@gmail.com"],
       subject: `New Contact Submission: ${subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; background-color: #09090B; color: #FFFFFF; padding: 30px;">
@@ -84,17 +88,18 @@ export async function sendNewPostBroadcast(
   postType: string,
   postDescription: string
 ) {
+  const resend = getResendClient();
   if (!resend || recipients.length === 0) {
     console.log(`[Resend Mock] New post notification sent to ${recipients.length} recipients.`);
     return { success: true, mocked: true };
   }
 
   try {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://smsaad.smsaad05082003.workers.dev";
+    const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://smsaad.online";
     const postUrl = `${siteUrl}/knowledge/artificial-intelligence/${postSlug}`;
 
     const { data, error } = await resend.emails.send({
-      from: "SMSAAD Dispatch <noreply@smsaad.online>",
+      from: "SMSAAD Dispatch <onboarding@resend.dev>",
       to: recipients,
       subject: `🚀 New ${postType.toUpperCase()}: ${postTitle}`,
       html: `
