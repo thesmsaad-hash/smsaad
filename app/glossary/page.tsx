@@ -1,0 +1,1 @@
+export default function GlossaryPage() { return <div className="py-12 bg-[#09090B] min-h-screen text-white text-center"><h1 className="text-4xl font-extrabold font-heading text-white mb-4">Glossary</h1><p className="text-[#A1A1AA]">Glossary Placeholder</p></div>; }

@@ -1,0 +1,15 @@
+/* Code blocks and inline code styles */
+code {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.875em;
+  color: var(--color-accent);
+  background-color: rgba(34, 211, 238, 0.08);
+  padding: 0.15em 0.35em;
+  border-radius: 0.25rem;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+}
