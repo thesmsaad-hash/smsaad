@@ -100,39 +100,50 @@ export async function sendNewPostBroadcast(
     const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://smsaad.online";
     const postUrl = `${siteUrl}/knowledge/artificial-intelligence/${postSlug}`;
 
-    const { data, error } = await resend.emails.send({
-      from: "SMSAAD Dispatch <onboarding@resend.dev>",
-      to: recipients,
-      subject: `🚀 New ${postType.toUpperCase()}: ${postTitle}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; background-color: #09090B; color: #FFFFFF; padding: 40px; border-radius: 12px;">
-          <div style="display: inline-block; padding: 4px 12px; background-color: rgba(124, 58, 237, 0.2); border: 1px solid #7C3AED; color: #22D3EE; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase;">
-            New ${postType} Article Published
-          </div>
-          <h1 style="color: #FFFFFF; font-size: 24px; margin-top: 16px;">${postTitle}</h1>
-          <p style="color: #A1A1AA; font-size: 15px; line-height: 1.6;">
-            ${postDescription}
-          </p>
-          <div style="margin-top: 24px;">
-            <a href="${postUrl}" style="display: inline-block; padding: 12px 24px; background-color: #7C3AED; color: #FFFFFF; text-decoration: none; font-weight: bold; border-radius: 8px;">
-              Read Full Article on SMSAAD →
-            </a>
-          </div>
-          <p style="margin-top: 40px; color: #71717A; font-size: 12px; border-top: 1px solid #27272A; padding-top: 16px;">
-            You are receiving this because you subscribed to SMSAAD Newsletter.
-          </p>
-        </div>
-      `,
-    });
+    const sendResults = [];
+    const errors = [];
 
-    if (error) {
-      console.error("[Resend Broadcast Error]", error);
-      return { success: false, error };
+    for (const recipient of recipients) {
+      const { data, error } = await resend.emails.send({
+        from: "SMSAAD Dispatch <onboarding@resend.dev>",
+        to: [recipient],
+        subject: `🚀 New ${postType.toUpperCase()}: ${postTitle}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; background-color: #09090B; color: #FFFFFF; padding: 40px; border-radius: 12px;">
+            <div style="display: inline-block; padding: 4px 12px; background-color: rgba(124, 58, 237, 0.2); border: 1px solid #7C3AED; color: #22D3EE; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase;">
+              New ${postType} Article Published
+            </div>
+            <h1 style="color: #FFFFFF; font-size: 24px; margin-top: 16px;">${postTitle}</h1>
+            <p style="color: #A1A1AA; font-size: 15px; line-height: 1.6;">
+              ${postDescription}
+            </p>
+            <div style="margin-top: 24px;">
+              <a href="${postUrl}" style="display: inline-block; padding: 12px 24px; background-color: #7C3AED; color: #FFFFFF; text-decoration: none; font-weight: bold; border-radius: 8px;">
+                Read Full Article on SMSAAD →
+              </a>
+            </div>
+            <p style="margin-top: 40px; color: #71717A; font-size: 12px; border-top: 1px solid #27272A; padding-top: 16px;">
+              You are receiving this because you subscribed to SMSAAD Newsletter.
+            </p>
+          </div>
+        `,
+      });
+
+      if (error) {
+        console.error(`[Resend Broadcast Error for ${recipient}]`, error);
+        errors.push({ recipient, error: error.message || error });
+      } else {
+        sendResults.push({ recipient, data });
+      }
     }
 
-    return { success: true, data };
-  } catch (err) {
+    if (sendResults.length === 0 && errors.length > 0) {
+      return { success: false, error: errors[0].error };
+    }
+
+    return { success: true, sentCount: sendResults.length, errors };
+  } catch (err: any) {
     console.error("[Resend Broadcast Exception]", err);
-    return { success: false, error: err };
+    return { success: false, error: err.message || err };
   }
 }
