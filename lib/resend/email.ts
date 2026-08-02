@@ -89,9 +89,11 @@ export async function sendNewPostBroadcast(
   postDescription: string
 ) {
   const resend = getResendClient();
-  if (!resend || recipients.length === 0) {
-    console.log(`[Resend Mock] New post notification sent to ${recipients.length} recipients.`);
-    return { success: true, mocked: true };
+  if (!resend) {
+    return { success: false, error: "RESEND_API_KEY is missing in Cloudflare environment variables." };
+  }
+  if (recipients.length === 0) {
+    return { success: false, error: "No active subscribers found." };
   }
 
   try {

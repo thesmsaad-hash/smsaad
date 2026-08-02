@@ -38,6 +38,16 @@ export async function POST(request: Request) {
       description || "A new technical breakdown has just been published on SMSAAD Platform."
     );
 
+    if (!broadcastResult.success) {
+      const errMsg = typeof broadcastResult.error === "string" 
+        ? broadcastResult.error 
+        : JSON.stringify(broadcastResult.error);
+      return NextResponse.json({
+        success: false,
+        error: errMsg || "Failed to send email broadcast",
+      });
+    }
+
     return NextResponse.json({
       success: true,
       recipientsCount: recipientEmails.length,
