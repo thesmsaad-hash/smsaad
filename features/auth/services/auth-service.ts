@@ -50,11 +50,14 @@ export async function signInWithMagicLink(formData: FormData) {
 
   const email = formData.get('email') as string;
   const supabase = await createClient();
+  // SITE_URL is a runtime env var (not NEXT_PUBLIC_) so it reads from Cloudflare
+  // bindings at runtime instead of being baked in at build time.
+  const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://smsaad.online';
 
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      emailRedirectTo: `${siteUrl}/auth/callback`,
     },
   });
 
@@ -68,11 +71,14 @@ export async function signInWithMagicLink(formData: FormData) {
 export async function signInWithOAuth(provider: 'google' | 'github') {
   'use server';
   const supabase = await createClient();
+  // SITE_URL is a runtime env var (not NEXT_PUBLIC_) so it reads from Cloudflare
+  // bindings at runtime instead of being baked in at build time.
+  const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://smsaad.online';
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      redirectTo: `${siteUrl}/auth/callback`,
     },
   });
 
